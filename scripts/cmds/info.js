@@ -21,9 +21,9 @@ module.exports = {
 
   onStart: async function ({ message }) {
 
-    const ownerName = "STARBOY Milon";
+    const ownerName = "STARBOY APHELION";
     const ownerAge = "N/A";
-    const ownerFB = "https://www.facebook.com/share/17uGq8qVZ9/";
+    const ownerFB = "https://facebook.com/star.boy.aphelion";
     const ownerNumber = "+88019XXXXXXX";
     const status = "Active";
 
@@ -34,7 +34,7 @@ module.exports = {
     const totalCommands = global.GoatBot?.commands?.size || 0;
 
     const images = [
-      "https://files.catbox.moe/t2lti9.mp4"
+      "https://files.catbox.moe/rulh0f.mp4"
     ];
     const image = images[Math.floor(Math.random() * images.length)];
 
@@ -54,16 +54,16 @@ module.exports = {
 ╔═《 ✨ 𝗢𝗪𝗡𝗘𝗥 & 𝗕𝗢𝗧 𝗜𝗡𝗙𝗢 ✨ 》═╗
 
 ⭓ 🤖 𝗕𝗼𝘁 𝗡𝗮𝗺𝗲   : 『 𝗥𝗔𝗙𝗜 𝗕𝗢𝗧 』
-⭓ ☄️ 𝗣𝗿𝗲𝗳𝗶𝘅      : 『 ! 』
+⭓ ☄️ 𝗣𝗿𝗲𝗳𝗶𝘅      : 『 ${prefix} 』
 ⭓ 🧠 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀    : 『 ${totalCommands} 』
 ⭓ ⚡ 𝗨𝗽𝘁𝗶𝗺𝗲      : 『 ${uptimeString} 』
 ⭓ 🗓️ 𝗗𝗮𝘁𝗲        : 『 ${date} 』
 ⭓ ⏰ 𝗧𝗶𝗺𝗲        : 『 ${time} 』
 
 ⭓ 👑 𝗢𝘄𝗻𝗲𝗿      : 『 𝗦𝗶𝘆𝗮𝗺 𝗔𝗵𝗺𝗲𝗱 𝗥𝗮𝗳𝗶 』
-⭓ 🎂 𝗔𝗴𝗲        : 『 17+』
+⭓ 🎂 𝗔𝗴𝗲        : 『 ${ownerAge} 』
 ⭓ ❤️ 𝗦𝘁𝗮𝘁𝘂𝘀     : 『 𝗦𝗶𝗻𝗴𝗲𝗹 』
-⭓ 📱 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽  : 『880 1815843985 』
+⭓ 📱 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽  : 『 01815843985 』
 ⭓ 🌐 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸  : 『 facebook.id=61585437908438 』
 
 ╚══════════════════════════╝
