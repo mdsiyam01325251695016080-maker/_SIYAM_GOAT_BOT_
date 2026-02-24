@@ -132,13 +132,13 @@
   <div style="background:#111; padding:25px; border-radius:20px; box-shadow:0 0 15px #ff4d88; max-width:800px; margin:auto;">
     <h2 style="color:#ff4d88;">💖 𝗢𝘄𝗻𝗲𝗿 𝗗𝗲𝘁𝗮𝗶𝗹𝘀</h2>
     <p style="color:#d0d0d0; line-height:1.6;">
-      👤 𝗡𝗮𝗺𝗲: 𝗦𝗶𝘆𝗮𝗺 𝗔𝗵𝗺𝗲𝗱 𝗥𝗔𝗳𝗶<br/>
-      🚹 𝗚𝗲𝗻𝗱𝗲𝗿: 𝗠𝗮𝗹𝗲<br/>
-      ❤️ 𝗥𝗲𝗹𝗮𝘁𝗶𝗼𝗻: 𝗦𝗶𝗻𝗴𝗹𝗲<br/>
+      👤 𝗡𝗮𝗺𝗲: Sɪʏꫝᴍ ꫝʜᴍᴇᴅ Rꫝғɪ<br/>
+      🚹 𝗚𝗲𝗻𝗱𝗲𝗿: Mꫝʟᴇ<br/>
+      ❤️ 𝗥𝗲𝗹𝗮𝘁𝗶𝗼𝗻: Sɪɴɢᴇʟ<br/>
       🎂 𝗔𝗴𝗲: 17+<br/>
-      🕌 𝗥𝗲𝗹𝗶𝗴𝗶𝗼𝗻: 𝗜𝘀𝗹𝗮𝗺<br/>
+      🕌 𝗥𝗲𝗹𝗶𝗴𝗶𝗼𝗻: Isʟꫝᴍ<br/>
       🎓 𝗘𝗱𝘂𝗰𝗮𝘁𝗶𝗼𝗻: 10<br/>
-      🏡 𝗔𝗱𝗱𝗿𝗲𝘀𝘀: 𝗦𝗵𝗮𝘁𝗸𝗵𝗶𝗿𝗮j
+      🏡 𝗔𝗱𝗱𝗿𝗲𝘀𝘀: Sꫝᴛᴋʜɪʀꫝ
     </p>
   </div>
 
