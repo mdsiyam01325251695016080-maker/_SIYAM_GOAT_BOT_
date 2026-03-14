@@ -1,128 +1,169 @@
-const axios = require("axios");
-const fs = require("fs-extra");
-const path = require("path");
+const { createCanvas } = require("canvas");
+const fs = require("fs");
 const os = require("os");
-const { createCanvas, loadImage } = require("canvas");
+const path = require("path");
 
 module.exports = {
   config: {
-    name: "up",
-    version: "26.0.0",
-    author: "Milon",
-    countDown: 5,
+    name: "uptime",
+    aliases: ["dashboard"],
+    version: "3.7",
+    author: "Azadx69x",//Author change korle tor marechudi 
     role: 0,
+    countDown: 5,
+    shortDescription: { en: "System status card" },
+    longDescription: { en: "Shows uptime, RAM, CPU, ping with inner card and body message" },
     category: "system",
-    description: "Uptime: No Prefix for Admin | English Version",
-    usePrefix: true
+    guide: { en: "{pn}" }
   },
 
   onStart: async function ({ api, event }) {
-    // Normal users with prefix will trigger this
-    return this.handleUptime({ api, event });
-  },
+    const uptimeBot = process.uptime();
+    const uptimeSystem = os.uptime();
+    const formatTime = sec => {
+      const d = Math.floor(sec / 86400);
+      const h = Math.floor((sec % 86400) / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = Math.floor(sec % 60);
+      return `${d}d ${h}h ${m}m ${s}s`;
+    };
 
-  onChat: async function ({ api, event }) {
-    const { body, senderID } = event;
-    if (!body) return;
+    const totalMem = os.totalmem() / 1024 / 1024;
+    const freeMem = os.freemem() / 1024 / 1024;
+    const usedMem = totalMem - freeMem;
+    const ramPercent = ((usedMem / totalMem) * 100).toFixed(1);
 
-    // Admin UID for No Prefix
-    const adminUID = "61588452928616";
-    const msg = body.toLowerCase();
+    const cpuModel = os.cpus()[0].model;
+    const cores = os.cpus().length;
+    const platform = `${os.platform()} (${os.arch()})`;
+    const hostname = os.hostname();
+    const ping = event.timestamp ? Date.now() - event.timestamp : "N/A";
+    const botMemory = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
 
-    // Trigger without prefix if sender is Admin
-    if (senderID == adminUID && (msg == "up" || msg == "uptime")) {
-      return this.handleUptime({ api, event });
-    }
-  },
+    const width = 600;
+    const height = 460;
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
 
-  handleUptime: async function ({ api, event }) {
-    const { threadID, messageID, senderID } = event;
+    ctx.fillStyle = "#0c1420";
+    ctx.fillRect(0, 0, width, height);
 
-    const cacheDir = path.join(__dirname, "cache");
-    if (!fs.existsSync(cacheDir)) fs.ensureDirSync(cacheDir);
+    const leftGlow = ctx.createLinearGradient(0, 0, 100, 0);
+    leftGlow.addColorStop(0, "rgba(0, 255, 255, 0.45)");
+    leftGlow.addColorStop(1, "rgba(0, 255, 255, 0)");
+    ctx.fillStyle = leftGlow;
+    ctx.fillRect(0, 0, 100, height);
 
-    const imgPath = path.join(cacheDir, `up_milon_${Date.now()}.png`);
+    const rightGlow = ctx.createLinearGradient(width - 100, 0, width, 0);
+    rightGlow.addColorStop(0, "rgba(0, 255, 255, 0)");
+    rightGlow.addColorStop(1, "rgba(0, 255, 255, 0.45)");
+    ctx.fillStyle = rightGlow;
+    ctx.fillRect(width - 100, 0, 100, height);
 
-    try {
-      const uptime = process.uptime();
-      const hours = Math.floor(uptime / 3600);
-      const minutes = Math.floor((uptime % 3600) / 60);
-      const seconds = Math.floor(uptime % 60);
-      const ram = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-      const ping = Date.now() - event.timestamp;
+    const cardX = 30;
+    const cardY = 60;
+    const cardWidth = width - 60;
+    const cardHeight = height - 100;
+    ctx.fillStyle = "#1a1f2b";
+    ctx.shadowColor = "#00bfff";
+    ctx.shadowBlur = 20;
+    ctx.fillRect(cardX, cardY, cardWidth, cardHeight);
+    ctx.shadowBlur = 0;
 
-      // Random Background Images
-      const imageUrls = [
-        "https://i.imgur.com/0rVoz4z.jpeg",
-        "https://i.imgur.com/yOksx4I.jpeg"
-      ];
-      const backgroundUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+    ctx.fillStyle = "#00bfff";
+    ctx.font = "22px Roboto";
+    ctx.shadowColor = "#00d5ff";
+    ctx.shadowBlur = 18;
+    ctx.fillText("IT'S FARHAN BOT", 50, 40);
 
-      const bgImg = await loadImage(backgroundUrl);
-      const canvas = createCanvas(bgImg.width, bgImg.height);
-      const ctx = canvas.getContext("2d");
+    const labels = [
+      "Bot Uptime", "System Uptime", "CPU", "RAM Usage",
+      "Platform", "Node.js", "Host", "Ping", "Memory (Bot)", "Developer"
+    ];
 
-      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    const values = [
+      formatTime(uptimeBot),
+      formatTime(uptimeSystem),
+      `${cpuModel} (${cores} cores)`,
+      `${usedMem.toFixed(0)} / ${totalMem.toFixed(0)} MB`,
+      platform,
+      process.version,
+      hostname,
+      `${ping} ms`,
+      `${botMemory} MB`,
+      "FARHAN KHAN"
+    ];
 
-      // --- Box Design ---
-      const boxWidth = canvas.width - 80;
-      const boxHeight = canvas.height - 120;
-      const boxX = (canvas.width / 2) - (boxWidth / 2); 
-      const boxY = (canvas.height / 2) - (boxHeight / 2); 
+    const labelColors = [
+      "#00ff7f", "#00ffff", "#ff00ff", "#ff4500",
+      "#1e90ff", "#ffd700", "#7fff00", "#ff69b4",
+      "#00bfff", "orange"
+    ];
 
-      ctx.fillStyle = "rgba(0, 0, 0, 0.85)"; 
-      ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+    ctx.font = "15px Roboto";
+    labels.forEach((label, i) => {
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = labelColors[i];
+      ctx.fillStyle = labelColors[i];
+      ctx.fillText(label, cardX + 20, cardY + 40 + i * 30);
 
-      // Rainbow Border
-      ctx.lineWidth = 12;
-      const gradient = ctx.createLinearGradient(boxX, boxY, boxX + boxWidth, boxY + boxHeight);
-      gradient.addColorStop(0, "violet");
-      gradient.addColorStop(0.5, "cyan");
-      gradient.addColorStop(1, "magenta");
-      ctx.strokeStyle = gradient;
-      ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+      ctx.shadowColor = "#68c6ff";
+      ctx.fillStyle = "#ffffff";
+      const maxWidth = cardWidth - 200;
+      ctx.fillText(values[i], cardX + 180, cardY + 40 + i * 30, maxWidth);
+    });
 
-      // --- English Text Design ---
-      ctx.textAlign = "center";
-      
-      // Title
-      ctx.font = "bold 50px Arial";
-      ctx.fillStyle = "#00FFCC"; 
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = "#00FFCC";
-      ctx.fillText("SYSTEM UPTIME STATUS", canvas.width / 2, boxY + 80);
-      ctx.shadowBlur = 0;
+    const centerX = cardX + cardWidth - 70;
+    const centerY = cardY + 60;
+    const radius = 45;
+    const startAngle = -Math.PI / 2;
+    const endAngle = startAngle + (2 * Math.PI * ramPercent / 100);
 
-      // Uptime Text
-      ctx.font = "bold 40px Arial";
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillText(`RUNNING: ${hours}h ${minutes}m ${seconds}s`, canvas.width / 2, boxY + 160);
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = "#111";
+    ctx.lineWidth = 7;
+    ctx.stroke();
 
-      // RAM & PING
-      ctx.font = "30px Arial";
-      ctx.fillStyle = "#FFCC00"; 
-      ctx.fillText(`RAM USAGE: ${ram} MB`, canvas.width / 2, boxY + 230);
-      
-      ctx.fillStyle = "#FF3366"; 
-      ctx.fillText(`LATENCY: ${ping}ms`, canvas.width / 2, boxY + 290);
+    const grad = ctx.createLinearGradient(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
+    grad.addColorStop(0, "#00ffff");
+    grad.addColorStop(0.5, "#00bfff");
+    grad.addColorStop(1, "#1e90ff");
 
-      // Footer
-      ctx.font = "italic 20px Arial";
-      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-      ctx.fillText("Developed by Farhan Khan", canvas.width / 2, boxY + boxHeight - 30);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 7;
+    ctx.shadowColor = "#00ffff";
+    ctx.shadowBlur = 20;
+    ctx.stroke();
 
-      const buffer = canvas.toBuffer("image/png");
-      fs.writeFileSync(imgPath, buffer);
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = "#00bfff";
+    ctx.fillStyle = "#00bfff";
+    ctx.font = "14px Roboto";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${ramPercent}%`, centerX, centerY);
 
-      return api.sendMessage({
-        attachment: fs.createReadStream(imgPath)
-      }, threadID, () => {
-        if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
-      }, messageID);
+    ctx.font = "16px Roboto";
+    ctx.fillStyle = "#00ffff";
+    ctx.shadowColor = "#00ffff";
+    ctx.shadowBlur = 15;
+    ctx.textAlign = "center";
+    ctx.fillText("[IT'S FARHAN BOT ALWAYS RAINING]⌛✅", width / 2, height - 20);
 
-    } catch (error) {
-      console.log(error);
-      return api.sendMessage("Error: Failed to generate uptime image.", threadID, messageID);
-    }
+    const buffer = canvas.toBuffer("image/png");
+    const filePath = path.join(__dirname, "status_card.png");
+    await fs.promises.writeFile(filePath, buffer);
+
+    await api.sendMessage(
+      { attachment: fs.createReadStream(filePath) },
+      event.threadID,
+      event.messageID
+    );
+
+    fs.unlinkSync(filePath);
   }
 };
