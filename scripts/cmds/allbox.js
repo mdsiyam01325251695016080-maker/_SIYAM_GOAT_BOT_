@@ -1,117 +1,100 @@
-const moment = require("moment-timezone");
-
 module.exports = {
   config: {
-    name: "allbox",
-    version: "1.0.0",
-    author: "MOHAMMAD AKASH",
-    countDown: 60,
-    role: 2,
-    shortDescription: "Manage all joined groups",
-    longDescription: "List all groups and reply to Ban, Unban, Delete data, or remove the bot",
-    category: "box chat",
-    usages: "[page number/all]",
+    name: "allgroup",
+    aliases: ["allgc"],
+    version: "1.4.1",
+    role: 2, // Bot Admin Only
+    author: "Milon",
+    description: "Manage all groups: List, Leave, or Add yourself to any group.",
+    category: "admin",
+    guide: {
+        en: "{pn}",
+        bn: "{pn}"
+    },
+    countDown: 5
   },
 
-  onStart: async function ({ event, api, commandName }) {
-    const { threadID, messageID } = event;
+/* --- [ 🔐 ADMIN MODULE ] ---
+ * ACCESS: BOT ADMIN ONLY
+ * FUNCTIONS: LIST, OUT, ADD, BAN
+ * ---------------------------- */
 
+  onStart: async function ({ api, event, message, commandName }) {
     try {
-      const dataThreads = await api.getThreadList(100, null, ["INBOX"]);
-      const groups = dataThreads.filter(thread => thread.isGroup);
-      if (!groups.length) return api.sendMessage("There are currently no groups!", threadID);
+      await api.getThreadList(25, null, ["INBOX"], (err, list) => {
+        if (err) return message.reply("Error: Could not fetch group list.");
 
-      // Sort groups by messageCount descending
-      groups.sort((a, b) => b.messageCount - a.messageCount);
+        const groups = list.filter(g => g.isGroup && g.isSubscribed);
+        if (groups.length === 0) return message.reply("The bot is not in any groups.");
 
-      let msg = "🎭 GROUP LIST 🎭\n\n";
-      const groupid = [];
-      const groupName = [];
+        let msg = "📊 [ ALL GROUPS MANAGEMENT ]\n\n";
+        let groupIDs = [];
 
-      groups.forEach((g, i) => {
-        msg += `${i + 1}. ${g.name}\n🔰TID: ${g.threadID}\n💌MessageCount: ${g.messageCount}\n\n`;
-        groupid.push(g.threadID);
-        groupName.push(g.name);
-      });
-
-      msg += "Reply to this message with: <ban | unban | del | out> + number or 'all'";
-
-      api.sendMessage(msg, threadID, (err, info) => {
-        global.GoatBot.onReply.set(info.messageID, {
-          commandName,
-          messageID: info.messageID,
-          author: event.senderID,
-          groupid,
-          groupName,
-          unsendTimeout: setTimeout(() => api.unsendMessage(info.messageID), this.config.countDown * 1000)
+        groups.forEach((group, index) => {
+          const name = group.name || "Unnamed Group";
+          const members = group.participantIDs ? group.participantIDs.length : "0";
+          msg += `${index + 1}. ${name}\n🆔 ID: ${group.threadID}\n👥 Members: ${members}\n\n`;
+          groupIDs.push(group.threadID);
         });
-      }, messageID);
 
-    } catch (error) {
-      console.error(error);
-      api.sendMessage("Error fetching group list.", threadID);
+        msg += '🎮 Actions:\n1. Reply "out <num>" to leave.\n2. Reply "add <num>" to join group.\n3. Reply "ban <num>" to block group.';
+
+        return message.reply(msg, (err, info) => {
+          global.GoatBot.onReply.set(info.messageID, {
+            commandName,
+            messageID: info.messageID,
+            author: event.senderID,
+            groupIDs
+          });
+        });
+      });
+    } catch (e) {
+      return message.reply("An unexpected error occurred.");
     }
   },
 
-  onReply: async function ({ event, Reply, api }) {
-    const { author, groupid, groupName, messageID } = Reply;
-    if (event.senderID !== author) return;
+  onReply: async function ({ api, event, Reply, message, threadsData }) {
+    const { author, groupIDs } = Reply;
+    if (event.senderID != author) return;
 
-    const args = event.body.trim().toLowerCase().split(" ");
-    clearTimeout(Reply.unsendTimeout);
+    const input = event.body.split(" ");
+    const action = input[0].toLowerCase();
+    const index = parseInt(input[1]) - 1;
+    const targetID = groupIDs[index];
 
-    const action = args[0];
-    const index = parseInt(args[1]) - 1;
+    if (!targetID || isNaN(index)) return message.reply("Invalid selection. Use: <action> <number>");
 
-    if (!["ban", "unban", "del", "out"].includes(action)) {
-      return api.sendMessage("Invalid action. Use: ban, unban, del, out", event.threadID);
-    }
-
-    if (args[1] === "all") {
-      for (let i = 0; i < groupid.length; i++) {
-        await processGroup(action, i);
-      }
-      return api.sendMessage(`✅ ${action.toUpperCase()} executed on all groups.`, event.threadID);
-    } else {
-      if (index < 0 || index >= groupid.length) return api.sendMessage("Invalid number!", event.threadID);
-      await processGroup(action, index);
-    }
-
-    async function processGroup(act, i) {
-      const idgr = groupid[i];
-      const gName = groupName[i];
-      const Threads = global.GoatBot.Threads;
-
-      if (act === "ban") {
-        const data = (await Threads.getData(idgr)).data || {};
-        data.banned = 1;
-        data.dateAdded = moment.tz("Asia/Dhaka").format("HH:mm:ss L");
-        await Threads.setData(idgr, { data });
-        global.data.threadBanned.set(idgr, { dateAdded: data.dateAdded });
-        api.sendMessage(`✅ Banned: ${gName}`, event.threadID);
-      }
-
-      if (act === "unban") {
-        const data = (await Threads.getData(idgr)).data || {};
-        data.banned = 0;
-        data.dateAdded = null;
-        await Threads.setData(idgr, { data });
-        global.data.threadBanned.delete(idgr);
-        api.sendMessage(`✅ Unbanned: ${gName}`, event.threadID);
-      }
-
-      if (act === "del") {
-        const data = (await Threads.getData(idgr)).data || {};
-        await Threads.delData(idgr, { data });
-        api.sendMessage(`✅ Data deleted: ${gName}`, event.threadID);
-      }
-
-      if (act === "out") {
-        api.removeUserFromGroup(api.getCurrentUserID(), idgr);
-        api.sendMessage(`✅ Bot removed from: ${gName}`, event.threadID);
+    if (action === "out") {
+      try {
+        await api.removeUserFromGroup(api.getCurrentUserID(), targetID);
+        return message.reply(`✅ Bot has left the group: ${targetID}`);
+      } catch (e) {
+        return message.reply("❌ Error: Could not leave the group.");
       }
     }
 
-    api.unsendMessage(messageID);
+    if (action === "add") {
+      try {
+        await api.addUserToGroup(author, targetID);
+        return message.reply(`✅ Success! I've added you to the group: ${targetID}`);
+      } catch (e) {
+        return message.reply("❌ Error: I cannot add you. I might not be an admin in that group.");
+      }
+    }
+
+    if (action === "ban") {
+      try {
+        const data = await threadsData.get(targetID);
+        if (!data.data) data.data = {};
+        data.data.banned = true;
+        await threadsData.set(targetID, data.data, "data");
+        
+        await api.sendMessage("🚫 This group is banned by Administrator.", targetID);
+        await api.removeUserFromGroup(api.getCurrentUserID(), targetID);
+        return message.reply(`✅ Group ${targetID} has been banned.`);
+      } catch (e) {
+        return message.reply("❌ Failed to ban group.");
+      }
+    }
   }
 };
