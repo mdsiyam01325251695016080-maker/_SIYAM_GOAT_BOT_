@@ -27,7 +27,7 @@ guide: "{pn}"
 onStart: async function ({ api, event }) {
 const { threadID, messageID, senderID } = event;
 
-const msg = "｟⏳BOT CONFIGURATION MENU⌛｠\n"
+const msg = "｟BOT CONFIGURATION MENU｠\n"
 + "\n01. Edit Bio"
 + "\n02. Edit Nickname"
 + "\n03. Pending Messages"
