@@ -47,7 +47,7 @@ module.exports = {
       });
 
       const totalCommands = commands.size;
-      msg += `\n\n╭─────✰[🌟 𝐄𝐍𝐉𝐎𝐘 🌟]\n│> TOTAL COMMANDS: [${totalCommands}]\n│\n│> TYPE: [ ${prefix}HELP <COMMAND> ]\n│\n│> FB.LINK: [https://www.facebook.com/DEVIL.FARHAN.420]\n╰────────────✰\n`;
+      msg += `\n\n╭─────✰[🌟 𝐄𝐍𝐉𝐎𝐘 🌟]\n│> TOTAL COMMANDS: [${totalCommands}]\n│\n│> TYPE: [ ${prefix}HELP <COMMAND> ]\n│\n│> FB.LINK: [https://www.facebook.com/MR.FARHAN.420]\n╰────────────✰\n`;
       msg += `\n╭─────✰\n│ 💖 𝗦𝗜𝗭𝗨𝗞𝗔-𝗕𝗢𝗧 💖\n╰────────────✰`; 
 
       // Random help image
