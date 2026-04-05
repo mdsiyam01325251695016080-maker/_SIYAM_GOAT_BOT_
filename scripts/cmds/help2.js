@@ -52,9 +52,9 @@ module.exports = {
 
       // Random help image
       const helpListImages = [
-        "https://files.catbox.moe/d5094c.jpg",
-        "https://files.catbox.moe/armyev.jpg",
-        "https://files.catbox.moe/xzllfg.jpg"
+        "https://files.catbox.moe/its4fz.jpg",
+        "https://files.catbox.moe/f6ca9r.jpg",
+        "https://files.catbox.moe/imgtqv.jpg"
       ];
       const helpListImage = helpListImages[Math.floor(Math.random() * helpListImages.length)];
 
@@ -106,4 +106,4 @@ function roleTextToString(roleText) {
     case 2: return "2 (Admin bot)";
     default: return "Unknown role";
   }
-                                     }
+}
