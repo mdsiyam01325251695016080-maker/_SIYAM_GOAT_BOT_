@@ -2,12 +2,15 @@ const axios = require("axios");
 const fs = require("fs-extra");
 const path = require("path");
 
+// 🔒 AUTHOR LOCK
+const LOCKED_AUTHOR = "FARHAN-KHAN";
+
 module.exports = {
   config: {
     name: "fork",
     aliases: ["repo", "link"],
     version: "1.3",
-    author: "Farhan",
+    author: LOCKED_AUTHOR,
     countDown: 3,
     role: 0,
     longDescription: "Send fork with styled image",
@@ -18,45 +21,54 @@ module.exports = {
   onStart: async function ({ message }) {
     try {
 
-      const text = `⋆✦⋆⎯⎯⎯⎯⎯⎯⎯⎯⎯⋆✦⋆
-‎    ╭•┄┅══❁♻️❁══┅┄•╮
+      // 🔒 author protection
+      if (module.exports.config.author !== LOCKED_AUTHOR) {
+        return message.reply("❌ AUTHOR LOCKED! You cannot modify this file.");
+      }
+
+      const text =
+`⋆✦⋆⎯⎯⎯⎯⎯⎯⎯⎯⎯⋆✦⋆
+╭•┄┅══❁♻️❁══┅┄•╮
  •—»✨𝗢𝗪𝗡𝗘𝗥 𝗙𝗢𝗥𝗞✨«—•
-‎    ╰•┄┅══❁♻️❁══┅┄•╯
-‎⋆✦⋆⎯⎯⎯⎯⎯⎯⎯⎯⎯⋆✦⋆
-‎╔══════════════════╗
-‎║👉-এই নাও বস ফারহান এর\nɢɪᴛʜᴜʙ ᴀᴄᴄᴏᴜɴᴛ  লিংক ফলো \nকরে দিও-♻️👇
-‎⋆✦⋆⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⋆✦⋆
-       ‎[>https://github.com/FARHAN-MIRAI-BOT/SIZUKA<]
-╠══════════════════╣`;
+╰•┄┅══❁♻️❁══┅┄•╯
+⋆✦⋆⎯⎯⎯⎯⎯⎯⎯⎯⎯⋆✦⋆
+
+╔══════════════════╗
+║👉 এই নাও বস ফারহান এর
+║   GitHub account লিংক 👇
+╠══════════════════╣
+║ https://github.com/FARHAN-MIRAI-BOT/SIZUKA
+╚══════════════════╝`;
 
       const imgUrl = "https://files.catbox.moe/0usiw5.jpg";
 
-      const cachePath = path.join(__dirname, "cache");
+      const cacheDir = path.join(__dirname, "cache");
+      const filePath = path.join(cacheDir, "fork.jpg");
 
-      // cache folder create if not exists
-      if (!fs.existsSync(cachePath)) {
-        fs.mkdirSync(cachePath);
+      // 📁 cache folder ensure
+      if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir, { recursive: true });
       }
 
-      const filePath = path.join(cachePath, "fork.jpg");
-
+      // 🌐 download image
       const response = await axios.get(imgUrl, {
         responseType: "arraybuffer"
       });
 
-      fs.writeFileSync(filePath, Buffer.from(response.data, "binary"));
+      fs.writeFileSync(filePath, Buffer.from(response.data));
 
+      // 📤 send message
       await message.reply({
         body: text,
         attachment: fs.createReadStream(filePath)
       });
 
-      // delete file after send
+      // 🧹 cleanup
       fs.unlinkSync(filePath);
 
     } catch (err) {
-      console.error(err);
-      message.reply("❌ Error sending fork!");
+      console.error("Fork command error:", err);
+      message.reply("❌ Failed to send fork message!");
     }
   }
 };
