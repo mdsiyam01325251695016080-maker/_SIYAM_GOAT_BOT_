@@ -46,3 +46,26 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
   console.log('Uptime server running on port 3000');
 });
+const config = require("./config.json");
+
+const OWNER_UID = "61573366160918";
+
+// 🔒 OWNER LOCK
+if (config.security.enableOwnerLock) {
+  if (config.security.ownerUID !== OWNER_UID) {
+    console.error("❌ OWNER UID CHANGED! BOT STOPPED.");
+    process.exit(1);
+  }
+}
+
+// 👑 OWNER BYPASS (এটাই আসল)
+global.hasPermission = function (uid) {
+
+  // 👑 OWNER ALWAYS ALLOWED
+  if (uid == OWNER_UID) return true;
+
+  // 🟢 ADMIN
+  if (config.adminBot.includes(uid)) return true;
+
+  return false;
+};
