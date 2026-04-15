@@ -65,14 +65,14 @@
   𝐅𝐑𝐎𝐌 𓆩𝐁𝐀𝐍𝐆𝐋𝐀𝐃𝐄𝐒𝐇𓆪</h3>
 
 ---
-  _______𝐌𝐘 𝐈𝐍𝐓𝐑𝐎_______
+- ➪___↓『 𝗠𝗬 𝗜𝗡𝗧𝗥𝗢 』↓___
 - ➪ 𝐍𝐀𝐌𝐄 : 𓆩𝐃𝐄𝐕𝐈𝐋-𝐅𝐀𝐑𝐇𝐀𝐍𓆪  
 - ➪ 𝐑𝐄𝐋𝐈𝐆𝐈𝐎𝐍 : 𝐈𝐒𝐋𝐀𝐌  
 - ➪ 𝐀𝐃𝐃𝐑𝐄𝐒𝐒 : 𝐂𝐇𝐔𝐀𝐃𝐀𝐍𝐆𝐀
 - ➪ 𝐄𝐃𝐔𝐂𝐀𝐓𝐈𝐎𝐍 : 𝐒𝐓𝐔𝐃𝐄𝐍𝐓  
 - ➪ 𝐑𝐄𝐋𝐀𝐓𝐈𝐎𝐍𝐒𝐇𝐈𝐏 : 𝐒𝐈𝐍𝐆𝐋𝐄  
 ---
-___𝐂𝐎𝐍𝐓𝐀𝐂𝐓 𝐌𝐄___
+- ➪___↓『 𝗖𝗢𝗡𝗧𝗔𝗖𝗧 𝗠𝗘 』↓___
 
 <!-- 🔴 FACEBOOK -->
 - ➪ 𝐅𝐀𝐂𝐄𝐁𝐎𝐎𝐊 :
@@ -95,7 +95,7 @@ ___𝐂𝐎𝐍𝐓𝐀𝐂𝐓 𝐌𝐄___
 ---
 
 <!-- 🔥 CONTACT -->
-<h3>🌐 𝐏𝐀𝐆𝐄 𝐅𝐎𝐋𝐋𝐎𝐖 𝐌𝐄 🌐</h3>
+<h3>🌐『𝐏𝐀𝐆𝐄 𝐅𝐎𝐋𝐋𝐎𝐖 𝐌𝐄』🌐</h3>
 
 <p>
 <a href="https://github.com/FARHAN-MIRAI-BOT/GOAT">
@@ -106,7 +106,7 @@ ___𝐂𝐎𝐍𝐓𝐀𝐂𝐓 𝐌𝐄___
 <img width="30px" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg">
 </a>
 
-<a href="https://www.instagram.com/devil.rj.farhan">
+<a href="https://www.instagram.com/mr_farhan.420">
 <img width="30px" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg">
 </a>
 </p>
