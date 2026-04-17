@@ -4,7 +4,7 @@ module.exports = {
     aliases: ["allgc"],
     version: "1.4.1",
     role: 2,
-    author: "FARHAN-KHAN",
+    author: "亗 SIYAM HASAN 亗",
     description: "Manage all groups: List, Leave, or Add yourself to any group.",
     category: "admin",
     guide: {
@@ -16,7 +16,7 @@ module.exports = {
 
   // 🔐 AUTHOR LOCK SYSTEM
   onLoad: function () {
-    const AUTHOR = "FARHAN-KHAN";
+    const AUTHOR = "亗 SIYAM HASAN 亗";
 
     if (module.exports.config.author !== AUTHOR) {
       console.log("⛔ AUTHOR LOCK TRIGGERED!");
