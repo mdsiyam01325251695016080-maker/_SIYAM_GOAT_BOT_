@@ -1,127 +1,142 @@
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 const { createCanvas, loadImage } = require("canvas");
 
 module.exports = {
   config: {
     name: "chakrun",
-    aliases: ["ckr", "chakrun"],
-    version: "9.0.0",
-    author: "FARHAN-KHAN",
+    version: "15.0.0",
+    author: "SIYAM HASAN",
     countDown: 5,
     role: 0,
     category: "system",
-    usePrefix: false 
-  },
-
-/* --- [ 🔐 FILE_CREATOR_INFORMATION ] ---
- * 🤖 BOT NAME: FARHAN BOT
- * 👤 OWNER: FARHAN-KHAN
- * 📍 LOCATION: CHUADANGA, BANGLADESH
- * 🛠️ PROJECT: FARHAN BOT PROJECT (2026)
- * --------------------------------------- */
-
-  onChat: async function ({ api, event, message }) {
-    if (!event.body) return;
-    const input = event.body.toLowerCase().trim();
-    if (input === "chakrun" || input === "ckr") {
-      return this.onStart({ api, event, message });
-    }
+    usePrefix: false
   },
 
   onStart: async function ({ api, event, message }) {
-    const { threadID } = event;
-    const imgURL = "https://i.imgur.com/AakQ8H9.jpeg"; 
+
+    const width = 1000;
+    const height = 550;
+
     const cacheDir = path.join(__dirname, "cache");
-    const imgPath = path.join(cacheDir, `sysinfo_${Date.now()}.png`);
+    const filePath = path.join(cacheDir, `final_${Date.now()}.png`);
 
     if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
 
-    const wait = await message.reply("⏳ Generating system info image, please wait...");
+    const wait = await message.reply("⚡ Creating Premium Card...");
 
     try {
-      let hostPlatform = "Unknown";
-      const platform = os.platform();
-      const uptime = process.uptime();
-      
-      const isRender = process.env.RENDER || (process.env.HOME && process.env.HOME.includes("/opt/render"));
-      const isRailway = process.env.RAILWAY_ID || process.env.RAILWAY_ENVIRONMENT;
-
-      if (isRender) hostPlatform = "Render Cloud";
-      else if (isRailway) hostPlatform = "Railway Cloud";
-      else if (platform === "linux") hostPlatform = "Linux VPS";
-      else if (platform === "win32") hostPlatform = "Windows";
-      else if (platform === "android") hostPlatform = "Termux";
-
-      const days = Math.floor(uptime / 86400);
-      const hours = Math.floor((uptime % 86400) / 3600);
-      const minutes = Math.floor((uptime % 3600) / 60);
-
-      const totalMem = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
-      const usedMem = ((os.totalmem() - os.freemem()) / 1024 / 1024 / 1024).toFixed(2);
-      const ping = Date.now() - event.timestamp;
-
-      // --- [ CANVAS DRAWING ] ---
-      const baseImage = await loadImage(imgURL);
-      const canvas = createCanvas(baseImage.width, baseImage.height);
+      const canvas = createCanvas(width, height);
       const ctx = canvas.getContext("2d");
 
-      ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+      // 🌌 Background Gradient
+      const bg = ctx.createLinearGradient(0, 0, width, height);
+      bg.addColorStop(0, "#0f2027");
+      bg.addColorStop(1, "#2c5364");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
 
-      ctx.fillStyle = "#ffffff";
-      ctx.strokeStyle = "#000000"; 
-      ctx.lineWidth = 4;
-      ctx.textBaseline = "top";
+      // 🧊 Glass Card
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      ctx.strokeStyle = "#00f7ff";
+      ctx.lineWidth = 2;
+      ctx.fillRect(40, 40, 920, 470);
+      ctx.strokeRect(40, 40, 920, 470);
 
-      const startX = canvas.width * 0.07; 
-      let currentY = canvas.height * 0.12; 
-      const lineSpacing = canvas.height * 0.095;
+      // 🔥 Title
+      const titleGrad = ctx.createLinearGradient(0, 0, 400, 0);
+      titleGrad.addColorStop(0, "#00f7ff");
+      titleGrad.addColorStop(1, "#00ff99");
 
-      ctx.font = `bold ${Math.floor(canvas.height * 0.085)}px sans-serif`;
-      ctx.strokeText("SIZUKA BOT SYSTEM INFO", startX, currentY);
-      ctx.fillText("SIZUKA BOT SYSTEM INFO", startX, currentY);
-      
-      currentY += lineSpacing * 1.5;
+      ctx.font = "bold 40px sans-serif";
+      ctx.fillStyle = titleGrad;
+      ctx.fillText("NIJHUM BOT SYSTEM", 80, 100);
 
-      ctx.font = `bold ${Math.floor(canvas.height * 0.055)}px sans-serif`;
-      
+      // 📊 System Info
+      const uptime = process.uptime();
+      const d = Math.floor(uptime / 86400);
+      const h = Math.floor((uptime % 86400) / 3600);
+      const m = Math.floor((uptime % 3600) / 60);
+
       const stats = [
-        `🌐 Host: ${hostPlatform}`,
-        `⚙️ OS: ${platform} (${os.arch()})`,
-        `⏳ Uptime: ${days}d ${hours}h ${minutes}m`,
-        `🧠 RAM: ${usedMem}GB / ${totalMem}GB`,
-        `📡 Ping: ${ping} ms`,
+        `🌐 Host: ${os.platform()}`,
+        `⚙️ OS: ${os.platform()} (${os.arch()})`,
+        `⏳ Uptime: ${d}d ${h}h ${m}m`,
+        `🧠 RAM: ${(os.totalmem()/1e9).toFixed(2)} GB`,
+        `📡 Ping: ${Date.now() - event.timestamp} ms`,
         `🟢 Node: ${process.version}`
       ];
 
-      stats.forEach((text) => {
-        ctx.strokeText(text, startX, currentY);
-        ctx.fillText(text, startX, currentY);
-        currentY += lineSpacing; 
+      let y = 170;
+      stats.forEach(line => {
+        const grad = ctx.createLinearGradient(0, 0, 300, 0);
+        grad.addColorStop(0, "#ffffff");
+        grad.addColorStop(1, "#00f7ff");
+
+        ctx.font = "28px sans-serif";
+        ctx.fillStyle = grad;
+        ctx.fillText(line, 80, y);
+        y += 55;
       });
 
-      // Footer
-      ctx.font = `italic bold ${Math.floor(canvas.height * 0.045)}px sans-serif`;
-      ctx.fillStyle = "#00FF00"; 
-      ctx.strokeText("Power by:-FARHAN-KHAN", startX, canvas.height - (lineSpacing * 1.1));
-      ctx.fillText("Power by:-FARHAN-KHAN", startX, canvas.height - (lineSpacing * 1.1));
+      // 🟢 Footer
+      ctx.font = "bold 26px sans-serif";
+      ctx.fillStyle = "#00ff99";
+      ctx.fillText("POWERED BY SIYAM HASAN", 80, 480);
 
-      const buffer = canvas.toBuffer("image/png");
-      fs.writeFileSync(imgPath, buffer);
+      // =========================
+      // 👤 PROFILE IMAGE (CIRCLE)
+      // =========================
+
+      const imgUrl = "https://files.catbox.moe/41hfau.jpg";
+
+      const imgBuffer = (await axios.get(imgUrl, {
+        responseType: "arraybuffer"
+      })).data;
+
+      const profile = await loadImage(imgBuffer);
+
+      const circleX = 800;
+      const circleY = 250;
+      const radius = 90;
+
+      // ✂️ Circle Crop
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(circleX, circleY, radius, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+
+      ctx.drawImage(profile, circleX - radius, circleY - radius, radius * 2, radius * 2);
+      ctx.restore();
+
+      // 🔵 Glow Border
+      ctx.beginPath();
+      ctx.arc(circleX, circleY, radius + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = "#00f7ff";
+      ctx.lineWidth = 4;
+      ctx.shadowColor = "#00f7ff";
+      ctx.shadowBlur = 15;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // =========================
+
+      fs.writeFileSync(filePath, canvas.toBuffer());
 
       api.unsendMessage(wait.messageID);
-      
+
       await message.reply({
-        attachment: fs.createReadStream(imgPath)
+        attachment: fs.createReadStream(filePath)
       });
 
-      fs.unlinkSync(imgPath);
+      fs.unlinkSync(filePath);
 
     } catch (err) {
       console.error(err);
-      if(wait) api.unsendMessage(wait.messageID);
-      return message.reply(`❌ Error: ${err.message}`);
+      return message.reply("❌ Error creating premium card!");
     }
   }
 };
