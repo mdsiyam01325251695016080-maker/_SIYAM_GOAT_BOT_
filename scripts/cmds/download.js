@@ -6,7 +6,7 @@ module.exports = {
   config: {
     name: "download",
     version: "1.4",
-    author: "FARHAN-KHAN", // LOCKED AUTHOR
+    author: "亗𝐃𝐒 乂𝐒𝐈𝐘𝐀𝐌亗", // LOCKED AUTHOR
     countDown: 5,
     role: 0,
     shortDescription: "Download media from direct link",
@@ -17,7 +17,7 @@ module.exports = {
   onStart: async function ({ api, event, args }) {
 
     // ===== AUTHOR LOCK SYSTEM =====
-    const LOCKED_AUTHOR = "FARHAN-KHAN";
+    const LOCKED_AUTHOR = "亗𝐃𝐒 乂𝐒𝐈𝐘𝐀𝐌亗";
 
     if (module.exports.config.author !== LOCKED_AUTHOR) {
       return api.sendMessage(
