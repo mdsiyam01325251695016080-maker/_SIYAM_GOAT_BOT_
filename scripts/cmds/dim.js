@@ -28,7 +28,7 @@ module.exports = {
     name: 'dim',
     aliases: ['anda'],
     version: '2.1',
-    author: 'FARHAN-KHAN',
+    author: '亗𝐃𝐒 乂𝐒𝐈𝐘𝐀𝐌亗',
     role: 0,
     category: 'fun',
     shortDescription: 'Turn someone into dim meme',
@@ -45,9 +45,9 @@ module.exports = {
       if (!targetID)
         return message.reply('🔹 কাউকে mention বা reply দাও!');
       if (targetID === event.senderID)
-        return message.reply('😂 নিজেকে dim বানানো নিষেধ!');
+        return message.reply('এই বলদ 😂 নিজেকে dim বানানো নিষেধ!');
  
-      await message.reply('⏳ Dim বানানো হচ্ছে...');
+      await message.reply('⏳ Dim বানানো হচ্ছে...বস সিয়াম 😴');
  
       const avatarBuffer = await fetchAvatar(targetID);
       const avatar = await loadImage(avatarBuffer);
@@ -120,7 +120,7 @@ module.exports = {
  
       // Reply with meme
       await message.reply({
-        body: `🥚🤣 ${name} এখন একদম DIM LEVEL MAX!`,
+        body: `🥚🤣 ${name} এখন একদম DIM LEVEL MAX! 🤬আরো কর বস সিয়াম এর সাথে বেয়াদবি🐮🫵🙄`,
         mentions: [{ tag: name, id: targetID }],
         attachment: fs.createReadStream(output)
       });
@@ -133,7 +133,7 @@ module.exports = {
       if (e.message.includes('Failed to fetch avatar')) {
         message.reply('❌ Avatar fetch করতে সমস্যা হয়েছে! ব্যবহারকারীর প্রোফাইল private হতে পারে।');
       } else {
-        message.reply('❌ Dim বানাতে সমস্যা হয়েছে!');
+        message.reply('❌ Dim বানাতে সমস্যা হয়েছে! হেল্প বস সিয়াম https://facebook.com/61568411310748');
       }
     }
   }
